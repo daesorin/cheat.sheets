@@ -1,0 +1,91 @@
+# rsync
+# Fast, versatile, remote and local file copying and synchronisation tool.
+
+# Basic and archive synchronisation
+# Copy files locally while preserving permissions, timestamps, symlinks, and ownership
+rsync -a /path/to/source /path/to/destination
+
+# Synchronise with verbose output, human-readable file sizes, and per-file progress
+rsync -avh --progress /path/to/source /path/to/destination
+
+# Perform a dry run to preview what would be transferred or deleted without altering the destination
+rsync -avn /path/to/source /path/to/destination
+
+# Trailing slash rules
+# Copy the directory itself into the destination (creates /destination/source/...)
+rsync -a /path/to/source /path/to/destination
+
+# Copy only the contents of the directory into the destination (creates /destination/...)
+rsync -a /path/to/source/ /path/to/destination
+
+# Remote transfers over SSH
+# Synchronise a local directory to a remote host over SSH with data compression
+rsync -avz /local/path/ user@remote.host:/remote/path/
+
+# Pull a remote directory to a local destination using a non-default SSH port
+rsync -av -e "ssh -p 2222" user@remote.host:/remote/path/ /local/path/
+
+# Use a specific SSH private key for automated or unattended transfers
+rsync -av -e "ssh -i ~/.ssh/backup_key" /local/path/ user@remote.host:/remote/path/
+
+# Mirroring and deletion
+# Mirror a source directory, deleting files on the destination that no longer exist on the source
+rsync -av --delete /path/to/source/ /path/to/destination/
+
+# Delete excluded files on the destination and cap total deletions to prevent accidental data loss
+rsync -av --delete --delete-excluded --max-delete=100 /path/to/source/ /path/to/destination/
+
+# Exclusions and filtering
+# Exclude specific files or subdirectories using glob patterns
+rsync -av --exclude='*.tmp' --exclude='node_modules/' /path/to/source/ /path/to/destination/
+
+# Read exclusion patterns from a plain text file (one pattern per line)
+rsync -av --exclude-from='.rsyncignore' /path/to/source/ /path/to/destination/
+
+# Advanced metadata preservation
+# Preserve hard links, POSIX ACLs, and extended filesystem attributes (including SELinux contexts)
+rsync -aHAX /path/to/source/ /path/to/destination/
+
+# Performance and network tuning
+# Limit network bandwidth consumption to 2000 KiB/s
+rsync -av --bwlimit=2000 /path/to/source/ /path/to/destination/
+
+# Disable the delta algorithm and transfer entire files (faster on high-speed local networks)
+rsync -av --whole-file /path/to/source/ /path/to/destination/
+
+# Retain partially transferred files and show progress to resume interrupted migrations
+rsync -avP /path/to/source/ /path/to/destination/
+
+# Hard link snapshots (incremental backups)
+# Create a space-efficient snapshot by hard-linking unchanged files against the previous backup
+rsync -a --delete --link-dest=/backup/yesterday/ /home/user/ /backup/today/
+
+# Daemon mode connections
+# Connect to an unencrypted rsync daemon module over TCP port 873
+rsync -av /local/path/ rsync://user@daemon.host/module_name/
+
+# Tunnel rsync daemon protocol traffic through an SSH port forward for security
+rsync -av /local/path/ rsync://localhost:8730/module_name/
+
+# Verbose debugging and transfer resumption
+# Synchronise with extra verbosity (-vv) to inspect skipped files and protocol debugging details, while retaining partial transfers and showing progress (-P)
+rsync -avvP /path/to/source/ /path/to/destination/
+
+# Perform a dry run with double verbosity to see exactly why individual files are being included or skipped
+rsync -avvn /path/to/source/ /path/to/destination/
+
+# Advanced SSH transport options
+# Connect through an intermediate SSH jump host (bastion server)
+rsync -av -e "ssh -J jumpuser@jumphost.example.com" /path/to/source/ targetuser@targethost:/remote/path/
+
+# Specify a custom SSH configuration file for complex remote routing or aliases
+rsync -av -e "ssh -F /path/to/custom_ssh_config" /path/to/source/ user@remote.host:/remote/path/
+
+# Bypass strict host key checking for automated scripts in ephemeral CI/CD environments
+rsync -av -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /path/to/source/ user@remote.host:/remote/path/
+
+# Specify a faster SSH cipher to reduce CPU overhead on high-speed, trusted local networks
+rsync -av -e "ssh -c aes128-gcm@openssh.com" /path/to/source/ user@remote.host:/remote/path/
+
+# Limit SSH connection attempts with a strict timeout (in seconds) to prevent scripts from hanging
+rsync -av -e "ssh -o ConnectTimeout=10" /path/to/source/ user@remote.host:/remote/path/
