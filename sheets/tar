@@ -20,3 +20,19 @@ tar --delete -f xdm_edited.tar.gz xdm
 #
 # If a destination (path given to `-C`) is not provided, the CWD will be used.
 tar -C /mnt -xvf Tarball.tar
+
+# Create a ZSTD compressed archive
+# create an archive using the built-in zstd flag
+tar --zstd -cf archive.tar.zst path/to/directory/
+
+# Create a multi threaded ZSTD archive
+# use all available cpu cores for faster compression on large datasets
+tar -I 'zstd -T0' -cf archive.tar.zst path/to/directory/
+
+# Create an ultra compressed ZSTD archive
+# apply maximum compression level and long distance matching for archival storage
+tar -I 'zstd --ultra -22 --long' -cf archive.tar.zst path/to/directory/
+
+# LIST ARCHIVE CONTENTS WITH AUTO COMPRESSION
+# select the decompression method automatically from the file extension
+tar -atf archive.tar.zst
