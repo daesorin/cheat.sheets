@@ -1,0 +1,143 @@
+# filen
+# Command-line interface for Filen, an end-to-end encrypted cloud storage provider.
+# All data is encrypted client-side before transmission.
+
+# Authentication and configuration
+# Log in interactively with email and password
+filen
+
+# Log in using non-interactive CLI flags
+filen --email <email> --password <password> [--two-factor-code <2fa>]
+
+# Show the currently authenticated account
+filen whoami
+
+# Export auth config to bypass login requests in clustered or server setups
+filen export-auth-config
+
+# Remove saved credentials from the local machine
+filen logout
+
+# Navigation and information
+# List files and directories in the root drive
+filen ls
+
+# List a specific remote path with detailed metadata (size, modification date)
+filen ls --long /Documents
+
+# Show drive storage limits and usage statistics
+filen statfs
+
+# Display detailed metadata for a specific file or directory
+filen stat /remote/file.txt
+
+# Print the contents of a remote file to standard output
+filen cat /remote/file.txt
+
+# Print the first or last 20 lines of a remote file
+filen head /remote/file.txt -n 20
+filen tail /remote/file.txt -n 20
+
+# List recently accessed files or favourited items
+filen recents
+filen favorites
+
+# Uploading and downloading
+# Upload a local file to a remote directory
+filen upload ./file.txt /remote/path/
+
+# Upload a local file and rename it on the destination
+filen upload report.pdf /Documents/Q1-Report.pdf
+
+# Upload multiple files using a shell glob pattern
+filen upload *.log /Logs/
+
+# Write plain text directly into a remote file
+filen write /remote/notes.txt "content string"
+
+# Download a remote file to a local destination
+filen download /remote/file.txt ./localfile.txt
+
+# Download a remote directory to the current working directory
+filen download /Backups/project .
+
+# File operations
+# Create a new remote directory structure
+filen mkdir /Documents/2026/Q1
+
+# Copy a remote file or directory to a new remote location
+filen cp /remote/source.txt /remote/backup.txt
+
+# Move or rename a remote file or directory
+filen mv /remote/old-name.txt /remote/new-name.txt
+
+# Delete a remote file or directory (moves to trash by default)
+filen rm /remote/file.txt
+
+# Permanently delete a remote item, bypassing the trash
+filen rm /remote/file.txt --no-trash
+
+# Download, open in the local default editor, and re-upload on save
+filen edit /remote/file.txt
+
+# Export all encrypted notes to a local directory
+filen export-notes ~/filen-notes
+
+# Synchronisation
+# Run an inline two-way sync between a local and remote path
+filen sync /local/path:/remote/path
+
+# Run a one-way local-to-cloud (push) sync
+filen sync /local/path:ltc:/remote/path
+
+# Run a one-way cloud-to-local (pull) sync
+filen sync /local/path:ctl:/remote/path
+
+# Run a continuous two-way sync loop
+filen sync /local/path:/remote/path --continuous
+
+# Execute all configured sync pairs defined in ~/.config/filen-cli/syncPairs.json
+filen sync
+
+# Execute a specific sync pair by its configured alias
+filen sync <alias>
+
+# Network mount and server gateways
+# Mount the Filen drive as a local filesystem (requires FUSE3)
+filen mount /mnt/filen
+
+# Unmount the local filesystem mount
+fusermount3 -u /mnt/filen
+
+# Start a single-user local WebDAV server
+filen webdav --w-user <user> --w-password <password> --w-port 8080
+
+# Start a multi-user WebDAV proxy server
+filen webdav-proxy --w-port 1900
+
+# Start a local S3-compatible server mirroring the drive
+filen s3 --s3-access-key-id <id> --s3-secret-access-key <key> --s3-port 9000
+
+# Trash and sharing management
+# List all items currently in the trash
+filen trash
+
+# Restore or permanently delete a specific trash item
+filen trash restore
+filen trash delete
+
+# Empty the trash completely
+filen trash empty
+
+# List all active public shared links
+filen links
+
+# Create, view, or manage a public link for a specific path
+filen links /remote/path
+
+# Maintenance
+# Update the CLI binary to the latest stable release
+filen install latest
+
+# Toggle switching to experimental canary releases
+filen canary
